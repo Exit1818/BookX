@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+<div class="col-md-10 col-md-offset-1">
+
+<div class="col-md-11">
+    	<img src="{{url_for('static',filename='upload/'+book.img)}}"/>
+        <div class="form-group row">
+            <label for="name" class="control-label col-md-3" style="color:#000000">书籍名称</label>
+            <div class="col-md-4">
+                {{book.name}}
+            </div>
+        </div>         
+
+        <div class="form-group row">
+            <label for="author" class="control-label col-md-3" style="color:#000000">作者</label>
+            <div class="col-md-4">
+                {{book.author}}
+            </div>
+        </div>
+            
+        <div class="form-group row">
+            <label for="category" class="control-label col-md-3" style="color:#000000">书籍类别</label>
+            <div class="col-md-4">
+                {{book.category}}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="press" class="control-label col-md-3" style="color:#000000">出版社</label>
+            <div class="col-md-4">
+                {{book.press}}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="note" class="control-label col-md-3" style="color:#000000">是否有批注/笔记</label>
+            <div class="col-md-4">
+                {{book.note}}
+            </div>
+        </div>
+
+
+		{% if g.user.is_admin %}
+	    	<div class="form-group row">
+	            <label for="note" class="control-label col-md-3" style="color:#000000">数目</label>
+	            <div class="col-md-4">
+	                {{book.num}}
+	            </div>
+	        </div>
+	    	<a href="{{url_for('delete',b_id=book.id)}}">删除这本书</a>
+	    	<a href="{{url_for('modify',b_id=book.id)}}">修改这本书</a>
+	   		{% if book.status == False %}
+	    	<a href="{{url_for('check_give',g_id=book.gives[0].id)}}?act=pass">pass</a>
+	    	<a href="{{url_for('check_give',g_id=book.gives[0].id)}}?act=reject">reject</a>
+	    	{% else %}
+	    	<a href="{{url_for('give',b_id=book.id)}}">提供这本书</a>
+	    	{% endif %}
+	    	<!-- {% if book.status == True %}
+	    	<script type="text/javascript">
+	    	function setbooknum(){
+	    		console.log($("#setbnum").attr('value'));
+	    		window.location="{{url_for('set',b_id=book.id)}}"+"?num="+$("#setbnum").attr('value');
+	    	}
+	    	</script>
+	    	<input id="setbnum"/>
+	    	<a href="javascript:setbooknum()">设置书本数目</a>
+	    	{% endif %} -->
+        {% elif book.status == True %}
+	    	<a href="{{url_for('give',b_id=book.id)}}">提供这本书</a>
+	    	{% if book.num>0 %}
+	    		<a href="{{url_for('get',b_id=book.id)}}">预订这本书</a>
+	    	{% endif %}
+	    {% else %}
+	    	<a href="{{url_for('modify',b_id=book.id)}}">修改这本书</a>
+    	{% endif %}
+</div>
+</div>
+</div>
+{% endblock %}
+
+
+

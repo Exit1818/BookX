@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script type="text/javascript" src="{{ url_for('static',filename='js/jquery.min2.js') }}"></script>
+<script type="text/javascript">
+  jQuery(document).ready(function($) {
+  $('.theme-login').click(function(){
+    u_id = $(this).attr('id');
+    $.ajax({
+    type: 'get',
+    url: '/administrator/getinfo/'+u_id,
+    error: function(xhr, err){
+    alert('请求失败，原因可能是：' + err + '！')
+    },
+    success: function(data, textStatus){
+      console.log(data);
+      var jsonData = JSON.parse(data);
+    $('#username').html(jsonData.username);
+    $('#mail').html(jsonData.mail);
+    $('#tel').html(jsonData.tel);
+    $('#school').html(jsonData.school);
+    $('#address').html(jsonData.address);
+    }
+    });
+    $('.theme-popover-mask').fadeIn(100);
+    $('.theme-popover').slideDown(200);
+  })
+  $('.theme-poptit .close').click(function(){
+    $('.theme-popover-mask').fadeOut(100);
+    $('.theme-popover').slideUp(200);
+  });
+});
+  //$('.plask-sidebar').scrollspy();
+</script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/lanrenzhijia.css')}}" media="all">
+{% endblock %}
+
+{% block content %}
+<div class="theme-popover">
+     <div class="theme-poptit">
+            <a href="javascript:;" title="关闭" class="close">×</a>
+            <h3>用户信息</h3>
+     </div>
+     <div class="theme-popbod dform">
+            <div class="form-group row">
+                <label for="username" class="control-label col-md-3" style="color:#000000">用户名</label>
+                <div class="col-md-4">
+                  <label id="username" class="control-label col-md-3" style="color:#000000"/>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="mail" class="control-label col-md-3" style="color:#000000">邮箱</label>
+                <div class="col-md-4">        
+                  <label id="mail" class="control-label col-md-3" style="color:#000000"/>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="tel" class="control-label col-md-3" style="color:#000000">手机号</label>
+                <div class="col-md-4">
+                    <label id="tel" class="control-label col-md-3" style="color:#000000"/>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="school" class="control-label col-md-3" style="color:#000000">学校</label>
+                <div class="col-md-4">
+                    <label id="school" class="control-label col-md-3" style="color:#000000"/>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="address" class="control-label col-md-3" style="color:#000000">详细地址</label>
+                <div class="col-md-4">
+                    <label id="address" class="control-label col-md-3" style="color:#000000"/>
+                </div>
+            </div>
+     </div>
+</div>
+ <div class="theme-popover-mask"></div>
+<div class="col-md-1">
+  <div id="plask-sidebar" class="plask-sidebar hidden-print hidden-xs hidden-sm">
+    <ul class="nav plask-sidenav">
+      <li>
+        <a href="#all_users"><span class="glyphicon glyphicon-user"></span>&nbsp;用户管理</a>
+      </li>
+      <li>
+        <a href="#new_gives"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;收到的新书</a>
+      </li>
+      <li>
+        <a href="#new_gets"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;未处理订单</a>
+      </li>
+      <li>
+        <a href="#send_gets"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;配送中订单</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+
+<div class="col-md-11">
+  
+  <h1>Administrator</h1>
+  <hr/>
+  <br/>
+
+  <h2 id="all_users" class="page-header">用户管理</h2>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>
+        <span>Username</span>
+      </th>
+      <th>
+        <span>Status</span>
+      </th>
+      <th>
+        <span>Operation</span>
+      </th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for u in users %}
+    <tr>
+    <td>
+      <a id="{{u.id}}" class="theme-login" href="javascript:;">{{ u.username }}
+      </a>
+    </td>
+
+    <td>
+      {% if u.is_ban %}
+        <span style="color:red">Banned</span>
+      {% else %}
+        <span>Normal</span>
+      {% endif %}
+    </td>
+
+    <td>
+      {% if not u.is_admin %}
+        {% if u.is_ban %}
+          <a class="btn btn-xs btn-success" href="{{url_for('unban_user', userid = u.id )}}">Unban</a>
+        {% else %}
+          <a class="btn btn-xs btn-danger" href="{{url_for('ban_user', userid = u.id )}}">Ban</a>
+        {% endif %}
+      {% endif %}
+    </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <br/>
+
+  <h2 id="new_gives" class="page-header">收到的新书</h2>
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>
+        <span>Name</span>
+      </th>
+      <th>
+        <span>Create time</span>
+      </th>
+      <th>
+        <span>User</span>
+      </th>
+      <th>
+        <span>Operation</span>
+      </th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for give in gives %}
+    <tr>
+    <td>
+      <a href="{{url_for('info', b_id = give.book_id )}}">{{ give.book.name }}</a>
+    </td>
+
+    <td>
+      <p>{{ give.time.strftime("%Y-%m-%d %H:%M:%S") }}</p>
+    </td>
+
+    <td>
+      <p>{{ give.user.username }}</p>
+    </td>
+
+    <td>
+        <a class="btn btn-xs btn-success" href="{{url_for('check_give', g_id = give.id )}}?act=pass">Pass</a>
+        <a class="btn btn-xs btn-danger" href="{{url_for('check_give', g_id = give.id )}}?act=reject">Reject</a>
+    </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <h2 id="new_gets" class="page-header">未处理订单</h2>
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>
+        <span>Name</span>
+      </th>
+      <th>
+        <span>Create time</span>
+      </th>
+      <th>
+        <span>User</span>
+      </th>
+      <th>
+        <span>Operation</span>
+      </th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for get in new_gets %}
+    <tr>
+    <td>
+      <a href="{{url_for('info', b_id = get.book_id )}}">{{ get.book.name }}</a>
+    </td>
+
+    <td>
+      <p>{{ get.time.strftime("%Y-%m-%d %H:%M:%S") }}</p>
+    </td>
+
+    <td>
+      <a id="{{get.user.id}}" class="theme-login" href="javascript:;">{{ get.user.username }}
+      </a>
+    </td>
+
+    <td>
+        <a class="btn btn-xs btn-success" href="{{url_for('check_get', g_id = get.id )}}?act=pass">Pass</a>
+        <a class="btn btn-xs btn-danger" href="{{url_for('check_get', g_id = get.id )}}?act=reject">Reject</a>
+    </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <h2 id="send_gets" class="page-header">配送中订单</h2>
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>
+        <span>Name</span>
+      </th>
+      <th>
+        <span>Create time</span>
+      </th>
+      <th>
+        <span>User</span>
+      </th>
+      <th>
+        <span>Operation</span>
+      </th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for get in send_gets %}
+    <tr>
+    <td>
+      <a href="{{url_for('info', b_id = get.book_id )}}">{{ get.book.name }}</a>
+    </td>
+
+    <td>
+      <p>{{ get.time.strftime("%Y-%m-%d %H:%M:%S") }}</p>
+    </td>
+
+    <td>
+      <a id="{{get.user.id}}" class="theme-login" href="javascript:;">{{ get.user.username }}
+      </a>
+    </td>
+
+    <td>
+        <a class="btn btn-xs btn-success" href="{{url_for('confirm_get', g_id = get.id )}}?act=confirm">Confirm</a>
+        <a class="btn btn-xs btn-danger" href="{{url_for('confirm_get', g_id = get.id )}}?act=cancel">Cancel</a>
+    </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+<div class="col-md-10 col-md-offset-1">
+
+<div class="col-md-11">
+
+    <div><h2 id="books" style="color:#000000">图书列表：</h2>
+    </div>
+
+	<div id="book_list">
+		<div class="panel panel-default">
+		<table id="proj_list" class="table table-striped">
+			<thead>
+			<tr class="thead_td" class="row fluid">
+
+			<td  class="sequence" id="proj_category"><h5>图书种类</h5></td>
+
+			<td  class="sequenceup" id="proj_author"><h5>作者</h5></td>
+			<td  class="sequenceup" id="proj_name"><h5>书名</h5></td>
+			</tr>
+			</thead>
+			<tbody val="ttt">
+			{% for b in books.items %}
+
+			<tr id="{{b.id}}">
+			<td>
+			<span id="category" class="category">
+
+			{{b.category}}
+
+			</span>
+			</td>
+			<td>
+			{{b.author}}
+			</td>
+			<td>
+			<a href="{{url_for('info',b_id=b.id)}}">{{b.name}}</a>
+			</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+		{% if books.has_prev %}<a href="{{ url_for('booklist', page = books.prev_num) }}">上一页</a>{% else %}上一页{% endif %} |
+		{% if books.has_next %}<a href="{{ url_for('booklist', page = books.next_num) }}">下一页</a>{% else %}下一页{% endif %}
+		</div>
+	</div>
+
+</div>
+</div>
+</div>
+{% endblock %}
+
+
+

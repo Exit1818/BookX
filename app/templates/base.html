@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>{{ page }}</title>
+    <meta name="author" content="site.author.name" charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}"/>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}"/>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/toastr.css') }}"/>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}"/>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/toastr.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/base.js') }}"></script>
+    {% block head %}{% endblock %}
+</script>
+</head>
+<body>
+<!-- navbar -->
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/" style="font-size:24px;color: white">Index</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+            </ul>
+            {% if g.user %}
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/user">{{ g.user.username }}</a></li>
+                {% if not g.user.is_admin %}
+                <li><a href="/questionnaire/create"><span class="glyphicon glyphicon-edit"></span></a></li>
+                {% endif %}
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+            {% else %}
+            <form class="navbar-form navbar-right" role="form">
+                {% if islogin %}
+                <a class="btn btn-warning" href="/register">Register</a>
+                {% else %}
+                <a class="btn btn-success" href="/login">Login</a>
+                {% endif %}
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% with messages = get_flashed_messages(category_filter=["message"]) %}
+    {% if messages %}
+    <script type="text/javascript">
+        (function() {
+          toastr.options = {
+            positionClass: 'toast-center-center'
+          };
+          toastr.success('{{ messages[-1] }}', 'Book-X');
+        }).call(this);
+    </script>
+    {% endif %}
+{% endwith %}
+
+{% with errors = get_flashed_messages(category_filter=["error"]) %}
+    {% if errors %}
+    <script type="text/javascript">
+        (function() {
+          toastr.options = {
+            positionClass: 'toast-center-center'
+          };
+          toastr.error('{{ errors[-1] }}', 'Plask');
+        }).call(this);
+    </script>
+    {% endif %}
+{% endwith %}
+
+<div class="container maindiv">
+
+    {% block content %}{% endblock %}
+
+</div>
+
+<a id="scrollUp" href="#top" title="" style="position: fixed; z-index: 2147483647"></a>
+<!-- footer -->
+<footer>
+    <p class="text-center">Copyright &copy; 2014 Plask</p>
+</footer>
+</body>
+</html>

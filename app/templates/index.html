@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div>	
+		{% if g.user %}
+		<h1>Hello,{{ g.user.username }}!</h1>
+		{% else %}
+		<h1>Hello,World!</h1>
+		{% endif %}
+		<a href="/booklist">全部</a>
+		<a href="/booklist?category=其他">其他</a>
+		<a href="/booklist?category=数学">数学</a>
+		<a href="/booklist?category=文学">文学</a>
+		<a href="/booklist?category=物理">物理</a>
+		<a href="/booklist?category=化学">化学</a>
+		<a href="/booklist?category=出国">出国</a>
+	</div>
+{% endblock %}

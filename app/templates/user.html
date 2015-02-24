@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/js/new_questionnaire.js') }}"></script>
+
+<div class="container-fluid">
+<div class="col-md-10 col-md-offset-1">
+<div class="col-md-1">
+  <div id="plask-sidebar" class="plask-sidebar hidden-print hidden-xs hidden-sm">
+    <ul class="nav plask-sidenav">
+      <li>
+        <a href="#information" style="color:#000000"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;个人信息</a>
+      </li>
+      <li>
+        <a href="#gives" style="color:#000000"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;发布的图书</a>
+      </li>
+      <li>
+        <a href="#gets" style="color:#000000"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;预订的图书</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="col-md-11">
+    
+	<form method="POST">
+
+        <h3 style="margin-top:25px; color:#000000">Welcome, {{user.username}} <a class="btn btn-success btn-m pull-right" role="button" href="{{url_for('add')}}" style="margin-top:-5px">发布图书</a></h3>
+
+    <div><h2 id="information" style="color:#000000">个人信息</h2>
+	    <div class="form-group row">
+	        <label for="username" class="control-label col-md-3" style="color:#000000">用户名</label>
+	        <div class="col-md-4">
+	        	{{user.username}}
+	        </div>
+	    </div>
+
+		<div class="form-group row">
+	        <label for="mail" class="control-label col-md-3" style="color:#000000">邮箱</label>
+	        <div class="col-md-4">
+	        	{{user.mail}}
+	        </div>
+	    </div>
+
+	    <div class="form-group row">
+	        <label for="tel" class="control-label col-md-3" style="color:#000000">手机号</label>
+	        <div class="col-md-4">
+	            {{user.tel}}
+	        </div>
+	    </div>
+
+	    <div class="form-group row">
+	        <label for="school" class="control-label col-md-3" style="color:#000000">学校</label>
+	        <div class="col-md-4">
+	            {{user.school}}
+	        </div>
+	    </div>
+
+	    <div class="form-group row">
+	        <label for="address" class="control-label col-md-3" style="color:#000000">详细地址</label>
+	        <div class="col-md-4">
+	            {{user.address}}
+	    </div>
+	</div>
+
+	    <div id="give_list">
+	    <h2 id="gives" style="color:#000000">发布的图书</h2>
+			<div class="panel panel-default">
+			<table id="proj_list" class="table table-striped">
+				<thead>
+				<tr class="thead_td" class="row fluid">
+
+				<td  class="sequence"><h5>图书种类</h5></td>
+
+				<td  class="sequenceup"><h5>书名</h5></td>
+
+				<td ><h5>发布时间</h5></td>
+				<td ><h5>状态</h5></td>
+				</tr>
+				</thead>
+
+				<tbody val="ttt">
+				{% for give in gives.items %}
+
+				<tr id="{{give.book_id}}">
+
+				<td>
+				<span id="category" class="category">
+
+				{{give.book.category}}
+
+				</span>
+				</td>
+				<td>
+				<a href="{{url_for('info',b_id=give.book_id)}}">{{give.book.name}}</a>
+				</td>
+				<td>{{give.time.strftime("%Y-%m-%d %H:%M")}}</td>
+				<td>
+					<p>
+					{% if give.status == 0 %}
+					待审核
+					{% elif give.status == 1 %}
+					已通过
+					{% else %}
+					已拒绝
+					{% endif %}
+					</p>
+				</td>
+				</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			</div>
+		</div>
+		<div id="get_list">
+	    <h2 id="gets" style="color:#000000">预订的图书</h2>
+			<div class="panel panel-default">
+			<table id="proj_list" class="table table-striped">
+				<thead>
+				<tr class="thead_td" class="row fluid">
+
+				<td  class="sequence"><h5>图书种类</h5></td>
+
+				<td  class="sequenceup"><h5>书名</h5></td>
+
+				<td >预订时间</td>
+				<td >状态</td>
+				</tr>
+				</thead>
+
+				<tbody val="ttt">
+				{% for get in gets.items %}
+
+				<tr id="{{get.book_id}}">
+
+				<td>
+				<span id="category" class="category">
+
+				{{get.book.category}}
+
+				</span>
+				</td>
+				<td>
+				<a href="{{url_for('info',b_id=get.book_id)}}">{{get.book.name}}</a>
+				</td>
+				<td>{{get.time.strftime("%Y-%m-%d %H:%M")}}</td>
+				<td>
+					<p>
+					{% if get.status == 0 %}
+					待审核
+					{% elif get.status == 1 %}
+					正在配送
+					{% elif get.status == 2 %}
+					已完成
+					{% else %}
+					已取消
+					{% endif %}
+					</p>
+				</td>
+				</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			</div>
+		</div>
+	</form>
+
+</div>
+</div>
+</div>
+{% endblock %}
+
+
+

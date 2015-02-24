@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block head %}
+<!-- 引用控制层插件样式 -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/zyUpload.css') }}" type="text/css">
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+
+<!-- 引用核心层插件 -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/zyFile.js') }}"></script>
+
+<!-- 引用控制层插件 -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/zyUpload.js') }}"></script>
+
+<!-- 引用初始化JS -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script> -->
+
+<script type="text/javascript">
+  jQuery(document).ready(function($) {
+  $('.theme-login').click(function(){
+    $('.theme-popover-mask').fadeIn(100);
+    $('.theme-popover').slideDown(200);
+  });
+  $('.theme-poptit .close').click(function(){
+    $('.theme-popover-mask').fadeOut(100);
+    $('.theme-popover').slideUp(200);
+  });
+});
+  </script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/lanrenzhijia.css')}}" media="all">
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+<div class="col-md-10 col-md-offset-1">
+
+<div class="col-md-11">
+
+        <div class="theme-popover">
+                 <div class="theme-poptit">
+                        <a href="javascript:;" title="关闭" class="close">×</a>
+                        <h3>上传书籍图片</h3>
+                 </div>
+            <div id="demo" class="demo"></div>
+        </div>
+        <div class="theme-login">
+        <a href="javascript:;">上传书籍图片
+        </a>
+        </div>
+        <div id="demo" class="demo"></div>
+        <form method="post">
+        {{form.hidden_tag()}}
+        
+        <input id="imgname" type="hidden" name="imgname" value="{{book.img}}"/>
+
+        <div class="form-group row">
+            <label for="name" class="control-label col-md-3" style="color:#000000">{{form.name.label}}</label>
+            <div class="col-md-4">
+                {{form.name(class_='form-control', value=book.name)}}
+            </div>
+        </div>         
+            
+        <div class="form-group row">
+            <label for="category" class="control-label col-md-3" style="color:#000000">{{form.category.label}}</label>
+            <div class="col-md-4">
+                {{form.category(class_='form-control', value=book.category)}}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="press" class="control-label col-md-3" style="color:#000000">{{form.press.label}}</label>
+            <div class="col-md-4">
+                {{form.press(class_='form-control', value=book.press)}}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="author" class="control-label col-md-3" style="color:#000000">{{form.author.label}}</label>
+            <div class="col-md-4">
+                {{form.author(class_='form-control', value=book.author)}}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="note" class="control-label col-md-3" style="color:#000000">{{form.note.label}}</label>
+            <div class="col-md-4">
+                {{form.note(class_='form-control', value=book.note)}}
+            </div>
+        </div>
+
+        <div class="form-group row">
+        <div class="col-md-offset-3 col-md-4">
+            <button class="btn btn-default" type="submit">保存
+            </button>
+        </div>
+        </form>
+    </div>
+
+</div>
+</div>
+</div>
+{% endblock %}
+
+
+
